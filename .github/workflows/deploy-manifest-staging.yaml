@@ -1,0 +1,22 @@
+name: deploy-staging-manifest
+
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - "infra/**"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{secrets.DOCTL_TOKEN}}
+      - run: doctl kubernetes cluster kubeconfig save ${{secrets.STAGING_CLUSTER_NAME}}
+      - run: kubectl apply -f infra/k8s-staging

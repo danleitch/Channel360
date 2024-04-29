@@ -1,0 +1,42 @@
+name: test-template-sync-service
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "apps/api/template-sync/**"
+  pull_request_target:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "apps/api/template-sync/package.json"
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - "apps/api/template-sync/**"
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build @channel360/core
+        run: |
+          yarn workspace @channel360/core install
+          yarn workspace @channel360/core build
+      - name: Run Tests
+        working-directory: apps/api/template-sync
+        run: |
+          yarn install
+          yarn run test:ci --coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: template-sync-service
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

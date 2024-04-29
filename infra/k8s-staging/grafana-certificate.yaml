@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-tls
+  namespace: monitoring
+spec:
+  secretName: grafana-staging-tls-secret
+  issuerRef:
+    name: letsencrypt-grafana-staging
+    kind: ClusterIssuer
+  dnsNames:
+    - grafana.staging.channel360.co.za

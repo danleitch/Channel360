@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: docker.io/hostpath  # This is an example provisioner for hostPath.
+reclaimPolicy: Retain  # Retain or Delete are common policies.
+volumeBindingMode: WaitForFirstConsumer  # This delays binding until a pod referencing the PVC is scheduled.

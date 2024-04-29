@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.name }}-depl"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.name }}"
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/ConfigMap.yaml") . | sha256sum }}
+      labels:
+        app: "{{ .Values.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.name }}"
+          image: "{{ .Values.deployment.repository }}/{{ .Values.name }}:{{ .Values.deployment.tag }}"
+          imagePullPolicy: Always
+          {{- if .Values.deployment.resources }}
+          resources:
+            {{- if .Values.deployment.resources.requests }}
+            requests:
+              memory: {{ .Values.deployment.resources.requests.memory | default "250Mi" | quote }}
+              cpu: {{ .Values.deployment.resources.requests.cpu | default "30m" | quote }}
+            {{- else}}
+            requests:
+              memory: "250Mi"
+              cpu: "30m"
+            {{- end}}
+            {{- if .Values.deployment.resources.limits }}
+            limits:
+              memory: {{ .Values.deployment.resources.limits.memory | default "1024Mi" | quote }}
+              cpu: {{ .Values.deployment.resources.limits.cpu | default "150m" | quote }}
+            {{- else}}
+            limits:
+              memory: "1024Mi"
+              cpu: "150m"
+            {{- end }}
+          {{- else }}
+          resources:
+            requests:
+              memory: "250Mi"
+              cpu: "30m"
+            limits:
+              memory: "1024Mi"
+              cpu: "150m"
+          {{- end }}
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ .Values.name }}-configmap"
+                  key: database_url
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: SMOOCH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: smooch-username-secret
+                  key: SMOOCH_USERNAME
+            - name: SMOOCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: smooch-password-secret
+                  key: SMOOCH_PASSWORD
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: ADMIN_JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: admin-secret
+                  key: ADMIN_JWT_KEY
+            - name: SENTRY_DSN
+              value: https://a2ceeaf1700440e2b322b7f982d9ad4d@o4503969502855168.ingest.sentry.io/4505464856510464
+            - name: SITE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: site-url
+                  key: SITE_URL
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-key
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_COGNITO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-secret
+                  key: AWS_COGNITO_CLIENT_SECRET
+            - name: AWS_COGNITO_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-region
+                  key: AWS_COGNITO_REGION
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID

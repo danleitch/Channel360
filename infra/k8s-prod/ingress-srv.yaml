@@ -1,0 +1,429 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-1"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = 'channel360.co.za' ) {
+        rewrite ^ https://www.channel360.co.za$request_uri permanent;
+      }
+
+spec:
+  tls:
+    - hosts:
+        - www.channel360.co.za
+        - channel360.co.za
+      secretName: channel-tls
+  rules:
+    - host: channel360.co.za
+    - http:
+        paths:
+          - path: "/webapi/user/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - path: "/webapi/admin/users?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - path: "/api/admin/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/admin/org?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/api/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/webapi/user/?(.*)/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/user/?(.*)/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/webapi/admin/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/settings?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/token?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/organization?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: organization-srv
+                port:
+                  number: 3000
+          - path: "/api/plan/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: plan-srv
+                port:
+                  number: 3000
+          - path: "/webapi/plans/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: plan-srv
+                port:
+                  number: 3000
+          - path: "/api/integration/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: integrations-srv
+                port:
+                  number: 3000
+          - path: "/api/subscriber/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/subscriber?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/subscriber?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/group?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/group?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/api/group/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: subscriber-srv
+                port:
+                  number: 3000
+          - path: "/api/templates/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: templates-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/templates?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: templates-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/templates?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: templates-srv
+                port:
+                  number: 3000
+          - path: "/api/campaigns?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: campaigns-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/campaigns?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: campaigns-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/campaigns?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: campaigns-srv
+                port:
+                  number: 3000
+          - path: "/api/notification/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/api/reply/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/charts/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: reports-srv
+                port:
+                  number: 3000
+          - path: "/webapi/admin/charts?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: reports-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/reports/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: reports-srv
+                port:
+                  number: 3000
+          - path: "/api/smooch/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/api/conversation?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/whatsapp/templates/refresh"
+            pathType: Prefix
+            backend:
+              service:
+                name: template-sync-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/whatsapp/templates/refresh"
+            pathType: Prefix
+            backend:
+              service:
+                name: template-sync-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/whatsapp?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/whatsapp?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/api/webhooks/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/webhooks?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/webhooks?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-srv
+                port:
+                  number: 3000
+          - path: "/api/services/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-srv
+                port:
+                  number: 3000
+          - path: "/api/logging/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: logging-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/logging/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: logging-srv
+                port:
+                  number: 3000
+
+          - path: "/api/scheduler/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: scheduler-srv
+                port:
+                  number: 3000
+          - path: "/api/refresh?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/api/ingest-templates?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: template-sync-srv
+                port:
+                  number: 3000
+          - path: "/api/create-template?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: conversation-router-srv
+                port:
+                  number: 3000
+          - path: "/webapi/org/([^/]+)/notification?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: send-notification-srv
+                port:
+                  number: 3000
+          - path: "/v1.1/org/([^/]+)/notification?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: send-notification-srv
+                port:
+                  number: 3000
+          - path: "/admin?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-srv
+                port:
+                  number: 3000
+          - path: "/?(.*)"
+            pathType: Prefix
+            backend:
+              service:
+                name: clientv2-srv
+                port:
+                  number: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
+    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "www.channel360.co.za"
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: "2618eb94-19f1-48da-b8a5-2d85eb617290"
+
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.6
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.1.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/component: controller

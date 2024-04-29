@@ -1,0 +1,3 @@
+config:
+  clients:
+    - url: http://loki-gateway.monitoring/loki/api/v1/push

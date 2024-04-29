@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clientv2-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clientv2
+  template:
+    metadata:
+      labels:
+        app: clientv2
+    spec:
+      containers:
+        - name: client
+          image: codenameninja/clientv2:staging
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_ENVIRONMENT
+              value: "staging"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clientv2-srv
+spec:
+  selector:
+    app: clientv2
+  ports:
+    - name: clientv2
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reports
+  template:
+    metadata:
+      labels:
+        app: reports
+    spec:
+      containers:
+        - name: reports
+          image: codenameninja/reports:staging
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/reports
+            - name: USER_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/auth
+            - name: CONVERSATION_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/conversation
+            - name: SUBSCRIBER_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/subscriber
+            - name: CAMPAIGN_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/campaigns
+            - name: LOGGING_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/logging
+            - name: TEMPLATE_MONGO_URI
+              value: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/templates
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: ADMIN_JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: admin-secret
+                  key: ADMIN_JWT_KEY
+            - name: SENTRY_DSN
+              value: https://a2ceeaf1700440e2b322b7f982d9ad4d@o4503969502855168.ingest.sentry.io/4505464856510464
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reports-srv
+spec:
+  selector:
+    app: reports
+  ports:
+    - name: reports
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

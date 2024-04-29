@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/campaigns
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/campaigns/src/**/*.ts'
+      docker:
+        dockerfile: apps/api/campaigns/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/campaigns-depl*
+deploy:
+  kubectl: {}

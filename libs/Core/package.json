@@ -1,0 +1,28 @@
+{
+  "name": "@channel360/core",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Channel360",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "dev": "tsc -w",
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "@sentry/integrations": "^7.75.0",
+    "@sentry/node": "^7.75.0",
+    "@sentry/tracing": "^7.75.0",
+    "@types/axios": "^0.14.0",
+    "axios": "^1.6.8",
+    "express-rate-limit": "^6.7.0",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "rate-limiter-flexible": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0"
+  }
+}

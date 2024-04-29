@@ -1,0 +1,29 @@
+{
+  "name": "subscriber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn --inspect=0.0.0.0:9229 -r tsconfig-paths/register --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "test:ci": "jest",
+    "test": "jest --watchAll --no-cache",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*",
+    "@types/csvtojson": "^2.0.0",
+    "csvtojson": "^2.0.10",
+    "json2csv": "^6.0.0-alpha.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/json2csv": "^5.0.3",
+    "@types/multer": "^1.4.10"
+  }
+}

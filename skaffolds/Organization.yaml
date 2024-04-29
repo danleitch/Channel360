@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/organization
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/organization/src/**/*.ts'
+      docker:
+        dockerfile: ./apps/api/organization/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/organization-depl*
+deploy:
+  kubectl: {}

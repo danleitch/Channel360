@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plan-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plan
+  template:
+    metadata:
+      labels:
+        app: plan
+    spec:
+      containers:
+        - name: plan
+          image: codenameninja/plan:latest
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: mongodb+srv://Zdr6sLatBzJ:CilrEyGwxCUulVeG@plan.u8g8sxb.mongodb.net/test
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: SENTRY_DSN
+            - name: ADMIN_JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: admin-secret
+                  key: ADMIN_JWT_KEY
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plan-srv
+spec:
+  selector:
+    app: plan
+  ports:
+    - name: plan
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

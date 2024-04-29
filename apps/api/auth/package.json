@@ -1,0 +1,36 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn -r tsconfig-paths/register --inspect=0.0.0.0:9229 --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "seed": "ts-node src/seeders/user-seeder.ts",
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest",
+    "migrate:up": "migrate-mongo up",
+    "migrate:down": "migrate-mongo down",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/migrate-mongo": "^8.2.0",
+    "csv-parse": "^5.5.2",
+    "jsonwebtoken": "^9.0.2",
+    "migrate-mongo": "^9.0.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "8.0.0",
+    "@types/imapflow": "^1.0.15",
+    "@types/mailparser": "^3.4.3",
+    "@types/nodemailer": "^6.4.14",
+    "imapflow": "^1.0.147",
+    "mailparser": "^3.6.5",
+    "nodemailer": "^6.9.12"
+  }
+}

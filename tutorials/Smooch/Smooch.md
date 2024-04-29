@@ -1,0 +1,1 @@
+The following documention, is to explain how we will be integrating Smooch into Channel360.

@@ -1,0 +1,19 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/conversation-router
+      context: ../
+      sync:
+        manual:
+          - src: apps/api/api/conversation-router/src/**/*.ts
+            dest: /app/apps/api/conversation-router
+      docker:
+        dockerfile: apps/api/conversation-router/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/conversation-router-depl*
+deploy:
+  kubectl: {}

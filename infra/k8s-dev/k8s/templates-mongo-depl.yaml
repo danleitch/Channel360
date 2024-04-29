@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: templates-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templates-mongo
+  template:
+    metadata:
+      labels:
+        app: templates-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: templates-mongo
+          args: ["--dbpath", "data/db/templates"]
+          volumeMounts:
+            - name: "templates-data"
+              mountPath: "/data/db/templates"
+      volumes:
+        - name: "templates-data"
+          persistentVolumeClaim:
+            claimName: "templates-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: templates-mongo-srv
+spec:
+  selector:
+    app: templates-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler-mongo
+  template:
+    metadata:
+      labels:
+        app: scheduler-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: scheduler-mongo
+          args: ["--dbpath", "data/db/scheduler"]
+          volumeMounts:
+            - name: "scheduler-data"
+              mountPath: "/data/db/scheduler"
+      volumes:
+        - name: "scheduler-data"
+          persistentVolumeClaim:
+            claimName: "scheduler-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scheduler-mongo-srv
+spec:
+  selector:
+    app: scheduler-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

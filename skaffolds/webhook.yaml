@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+
+    - image: codenameninja/webhook
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/webhook/src/**/*.ts'
+
+      docker:
+        dockerfile: ./apps/api/webhook/Dockerfile.dev
+
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/webhook*
+deploy:
+  kubectl: { }

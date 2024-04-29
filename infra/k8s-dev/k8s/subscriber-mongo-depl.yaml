@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriber-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscriber-mongo
+  template:
+    metadata:
+      labels:
+        app: subscriber-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: subscriber-mongo
+          args: ["--dbpath", "data/db/subscriber"]
+          volumeMounts:
+            - name: "subscriber-data"
+              mountPath: "/data/db/subscriber"
+      volumes:
+        - name: "subscriber-data"
+          persistentVolumeClaim:
+            claimName: "subscriber-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscriber-mongo-srv
+spec:
+  selector:
+    app: subscriber-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

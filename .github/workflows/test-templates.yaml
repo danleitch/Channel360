@@ -1,0 +1,51 @@
+name: test-templates-service
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "apps/api/templates/**"
+  pull_request_target:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "apps/api/templates/package.json"
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - "apps/api/templates/**"
+
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build @channel360/core
+        run: |
+          yarn workspace @channel360/core install
+          yarn workspace @channel360/core build
+
+      - name: Install Packages
+        working-directory: apps/api/templates
+        run: yarn install
+
+      - name: Run linter
+        working-directory: apps/api/templates
+        run: yarn lint
+
+      - name: Run Tests
+        working-directory: apps/api/templates
+        run: yarn run test:ci --coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: templates-service
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

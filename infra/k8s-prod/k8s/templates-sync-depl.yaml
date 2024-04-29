@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-sync-depl
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: template-sync
+  template:
+    metadata:
+      labels:
+        app: template-sync
+    spec:
+      containers:
+        - name: template-sync
+          image: codenameninja/template-sync:latest
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/templates
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-api-key
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-api-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: SENTRY_DSN
+            - name: SMOOCH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: smooch-username-secret
+                  key: SMOOCH_USERNAME
+            - name: SMOOCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: smooch-password-secret
+                  key: SMOOCH_PASSWORD
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-sync-srv
+spec:
+  selector:
+    app: template-sync
+  ports:
+    - name: template-sync
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

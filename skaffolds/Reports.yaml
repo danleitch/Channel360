@@ -1,0 +1,50 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/organization
+      context: ../apps/api/organization
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: codenameninja/subscriber
+      context: ../apps/api/ubscriber
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: codenameninja/templates
+      context: ../apps/api/templates
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: codenameninja/reports
+      context: ../apps/api/reports
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/jetstream.yaml
+    - ../infra/k8s-dev/k8s/nats*
+    - ../infra/k8s-dev/k8s/conversation-router*
+    - ../infra/k8s-dev/k8s/reports*
+    - ../infra/k8s-dev/k8s/organization*
+    - ../infra/k8s-dev/k8s/subscriber*
+    - ../infra/k8s-dev/k8s/templates*
+    - ../infra/k8s-dev/ingress-srv.yaml
+deploy:
+  kubectl: {}

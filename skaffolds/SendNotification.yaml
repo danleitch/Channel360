@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+
+    - image: codenameninja/send-notification
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/send-notification/src/**/*.ts'
+
+      docker:
+        dockerfile: ./apps/api/send-notification/Dockerfile.dev
+
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/send-notification*
+deploy:
+  kubectl: { }

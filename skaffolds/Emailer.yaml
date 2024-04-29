@@ -1,0 +1,19 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/auth
+      context: ../
+      sync:
+        manual:
+          - src: “apps/api/auth/src/**/*.ts”
+            dest: ./apps/api/auth
+      docker:
+        dockerfile: ./apps/api/auth/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/auth-depl*
+deploy:
+  kubectl: {}

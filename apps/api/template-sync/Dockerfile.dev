@@ -1,0 +1,17 @@
+FROM node:20.2-alpine3.17
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+
+COPY libs/Core libs/Core
+
+COPY apps/api/template-sync apps/api/template-sync
+
+RUN yarn install
+
+RUN yarn workspace @channel360/core build
+
+WORKDIR /app/apps/api/template-sync
+
+CMD ["yarn", "start"]

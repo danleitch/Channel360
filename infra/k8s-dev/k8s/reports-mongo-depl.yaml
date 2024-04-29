@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reports-mongo
+  template:
+    metadata:
+      labels:
+        app: reports-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: reports-mongo
+          args: ["--dbpath", "data/db/campaigns"]
+          volumeMounts:
+            - name: "campaigns-data"
+              mountPath: "/data/db/campaigns"
+      volumes:
+        - name: "campaigns-data"
+          persistentVolumeClaim:
+            claimName: "campaigns-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reports-mongo-srv
+spec:
+  selector:
+    app: reports-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

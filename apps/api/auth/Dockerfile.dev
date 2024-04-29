@@ -1,0 +1,17 @@
+FROM node:20.2-alpine3.17
+
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+
+COPY libs/Core libs/Core
+
+COPY apps/api/auth apps/api/auth
+
+RUN yarn install --frozen-lockfile
+
+RUN yarn workspace @channel360/core build
+
+WORKDIR /app/apps/api/auth
+
+CMD ["yarn", "start"]

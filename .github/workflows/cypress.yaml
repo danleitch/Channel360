@@ -1,0 +1,48 @@
+name: Cypress Tests
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "apps/frontend/clientv2/**"
+
+  workflow_dispatch:
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [ 1, 2 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Adjust the version as needed
+
+      - name: Install Dependencies
+        run: yarn install
+        working-directory: apps/frontend/clientv2
+
+      - name: Build ui-core
+        run: yarn build
+        working-directory: libs/ui-core
+
+      - name: Build Client Application
+        run: yarn build
+        working-directory: apps/frontend/clientv2
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: apps/frontend/clientv2
+          start: yarn start
+          wait-on: 'http://localhost:3000' # Waits for above
+          record: true
+          parallel: true
+          browser: chrome
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

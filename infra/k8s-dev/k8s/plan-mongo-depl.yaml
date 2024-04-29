@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plan-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plan-mongo
+  template:
+    metadata:
+      labels:
+        app: plan-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: plan-mongo
+          args: ["--dbpath", "data/db/plan"]
+          volumeMounts:
+            - name: "plan-data"
+              mountPath: "/data/db/plan"
+      volumes:
+        - name: "plan-data"
+          persistentVolumeClaim:
+            claimName: "plan-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plan-mongo-srv
+spec:
+  selector:
+    app: plan-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

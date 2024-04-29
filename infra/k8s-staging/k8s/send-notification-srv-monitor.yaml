@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: send-notification-srv-monitor
+  annotations:
+    prometheus.io/port: "send-notification"
+    prometheus.io/scrape: "true"
+  labels:
+    monitoring: "true"
+spec:
+  selector:
+    matchLabels:
+      app: send-notification
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: send-notification
+      interval: 30s
+      path: /metrics

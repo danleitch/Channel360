@@ -1,0 +1,28 @@
+prometheus:
+  url: http://prometheus-operated.monitoring.svc.cluster.local
+  port: 9090
+rules:
+  custom:
+    - seriesQuery: '{__name__="jetstream_consumer_num_pending",stream_name="NOTIFICATION"}'
+      resources:
+        template: <<.Resource>>
+      name:
+        matches: "^(.*)"
+        as: "jetstream_notification_pending"
+      metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>,stream_name="NOTIFICATION"}[2m])) by (<<.GroupBy>>)'
+
+    - seriesQuery: '{__name__="jetstream_consumer_num_pending",stream_name="NOTIFICATION_STATUS"}'
+      resources:
+        template: <<.Resource>>
+      name:
+        matches: "^(.*)"
+        as: "jetstream_notification_status_pending"
+      metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>,stream_name="NOTIFICATION_STATUS"}[2m])) by (<<.GroupBy>>)'
+
+    - seriesQuery: '{__name__="http_requests_total"}'
+      resources:
+        template: <<.Resource>>
+      name:
+        matches: "^(.*)"
+        as: "http_requests_total"
+      metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'

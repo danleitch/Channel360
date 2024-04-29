@@ -1,0 +1,14 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/jetstream.yaml
+    - ../infra/k8s-dev/k8s/nats*
+    - ../infra/k8s-dev/ingress-srv.yaml
+deploy:
+  kubectl: { }

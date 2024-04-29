@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/templates
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/templates/src/**/*.ts'
+      docker:
+        dockerfile: apps/api/templates/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/templates-depl*
+deploy:
+  kubectl: {}

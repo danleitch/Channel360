@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriber-depl
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: subscriber
+  template:
+    metadata:
+      labels:
+        app: subscriber
+    spec:
+      containers:
+        - name: subscriber
+          image: codenameninja/subscriber:latest
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: mongodb+srv://Zdr6sLatBzJ:CilrEyGwxCUulVeG@subscribers.aqyvr9c.mongodb.net/susbcriber
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: SENTRY_DSN
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-key
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+            - name: AWS_COGNITO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-secret
+                  key: AWS_COGNITO_CLIENT_SECRET
+            - name: AWS_COGNITO_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-region
+                  key: AWS_COGNITO_REGION
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscriber-srv
+spec:
+  selector:
+    app: subscriber
+  ports:
+    - name: subscriber
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

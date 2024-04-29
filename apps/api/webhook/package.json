@@ -1,0 +1,21 @@
+{
+  "name": "webhook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn --inspect=0.0.0.0:9229 -r tsconfig-paths/register --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest --no-cache"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*",
+    "@types/axios": "^0.14.0",
+    "axios": "^1.6.8"
+  },
+  "devDependencies": {}
+}

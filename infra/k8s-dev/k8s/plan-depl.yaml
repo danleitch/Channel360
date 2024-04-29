@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plan-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plan
+  template:
+    metadata:
+      labels:
+        app: plan
+    spec:
+      containers:
+        - name: plan
+          image: codenameninja/plan
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: mongodb://plan-mongo-srv:27017/plan
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: ADMIN_JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: admin-secret
+                  key: ADMIN_JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plan-srv
+spec:
+  selector:
+    app: plan
+  ports:
+    - name: plan
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

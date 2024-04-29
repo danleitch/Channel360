@@ -1,0 +1,45 @@
+config:
+  target: 'https://staging.channel360.co.za'
+  processor: "./generateRandomDestination.js"
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm up phase
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+      name: Ramp up load
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 30
+      name: Spike phase
+  plugins:
+    ensure: { }
+    apdex: { }
+    metrics-by-endpoint: { }
+  apdex:
+      threshold: 100
+  ensure:
+      thresholds:
+        - http.response_time.p99: 100
+        - http.response_time.p95: 75
+  defaults:
+    headers:
+      Content-Type: 'application/json' # Assuming JSON payload
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MjQ0Mzk2NTVjZjM3YThkZjBjZTIwYiIsIm5hbWUiOiJDTSBTdGFnaW5nIiwiaWF0IjoxNjk5NTMwOTc4fQ.dNYaqRxIAIVFH4Bc41rNXEH7cocP0sNZF2CVfkD7dP4'
+scenarios:
+  - flow:
+      - post:
+          url: '/v1.1/org/6424439655cf37a8df0ce20b/notification'
+          beforeRequest: "setDestination"
+          json:
+            destination: "DEFAULT"
+            message:
+              type: "template"
+              template:
+                name: "generic"
+                language:
+                  policy: "deterministic"
+                  code: "en"
+                components: []

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jetstream-config
+data:
+  nats-server.conf: |
+    cluster: {
+      name: SA1,
+      port: 6222,      
+      routes: [
+        nats://nats-jet-0:6222,
+        nats://nats-jet-1:6222,
+        nats://nats-jet-2:6222
+      ]
+    } 
+    
+    jetstream: {
+       store_dir: "/data/jetstream",
+       max_mem: 1G,
+       max_file: 5G
+    }
+    
+    trace: true
+    
+    trace_verbose:true
+    
+    debug:true
+    
+    server_name: "nats-jetstream"    
+    
+    max_payload: 20971520
+    
+    accounts: {
+      $SYS: {
+        users: [
+          {user: admin, password: MooDW5nt}
+        ]
+      },
+      TEAM_A: {
+        jetstream: enabled,
+        users: [
+          {user: user_MooDW5nt, password: QPkiRc3T}
+        ]        
+      }
+    }
+    
+    

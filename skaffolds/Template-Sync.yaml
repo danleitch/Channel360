@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/template-sync
+      context: ../
+      sync:
+        infer:
+          - 'apps/api/template-sync/src/**/*.ts'
+      docker:
+        dockerfile: apps/api/template-sync/Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/template-sync*
+deploy:
+  kubectl: {}

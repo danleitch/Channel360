@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emailer-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emailer
+  template:
+    metadata:
+      labels:
+        app: emailer
+    spec:
+      containers:
+        - name: emailer
+          image: codenameninja/emailer:staging
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: SITE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: site-url
+                  key: SITE_URL
+            - name: API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api-url
+                  key: API_URL
+            - name: SENDGRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sendgrid-api-key
+                  key: SENDGRID_API_KEY
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emailer-srv
+spec:
+  selector:
+    app: emailer
+  ports:
+    - name: emailer
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

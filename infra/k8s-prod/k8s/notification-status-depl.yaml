@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-status-depl
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: notification-status
+  template:
+    metadata:
+      labels:
+        app: notification-status
+    spec:
+      containers:
+        - name: notification-status
+          image: codenameninja/notification-status:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "150Mi"
+              cpu: "75m"
+            requests:
+              memory: "50Mi"
+              cpu: "50m"
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/campaigns
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry-dsn
+                  key: SENTRY_DSN
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+          ports:
+            - containerPort: 3000 # Application port
+            - containerPort: 9229 # Debugging port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-status-srv
+spec:
+  selector:
+    app: notification-status
+  ports:
+    - name: notification-status
+      protocol: TCP
+      port: 3000 # Application port
+      targetPort: 3000 # Application port
+    - name: debug
+      protocol: TCP
+      port: 9229 # Debugging port
+      targetPort: 9229 # Debugging port
+  # Port-forwarding rule to forward port 9229 to the pod
+  # This allows external access to the debugging port
+  # Replace "<YOUR-EXTERNAL-PORT>" with the desired external port
+  # For example, if you want to expose it on port 9229 externally, you can use:
+  # nodePort: 9229
+  type: NodePort

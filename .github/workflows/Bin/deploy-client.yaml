@@ -1,0 +1,45 @@
+name: deploy-client-service
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - "apps/frontend/client/**"
+
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update .env file
+        run: echo "NEXT_PUBLIC_ENVIRONMENT=${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'staging' }}" > ./apps/frontend/client/.env
+      - run: |
+          IMAGE_TAG=${{ github.ref_name == 'main' && 'latest' || 'staging' }}
+          docker build -t ${{secrets.DOCKER_USERNAME}}/client:$IMAGE_TAG -f ./apps/frontend/client/Dockerfile .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push Docker Image
+        run: |
+          IMAGE_TAG=${{ github.ref_name == 'main' && 'latest' || 'staging' }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/client:$IMAGE_TAG
+  restart-deployment:
+    needs: [ build-and-push ]
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref }}
+    steps:
+      - name: Setup Doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{secrets.DOCTL_TOKEN}}
+
+      - name: Update Kubernetes Config
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.CLUSTER_NAME }}
+      - name: Restart client Deployment
+        run: kubectl rollout restart deployment client-depl

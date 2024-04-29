@@ -1,0 +1,19 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn --inspect=0.0.0.0:9229 -r tsconfig-paths/register --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*",
+    "agenda": "^5.0.0",
+    "agendash": "^4.0.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,252 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: auth-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/auth
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: auth-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: campaigns-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/campaigns
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: campaigns-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: conversation-router-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/conversation
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: conversation-router-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: emailer-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/emailer
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: emailer-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: integrations-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/integrations
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: integrations-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: organization-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/organization
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: organization-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plan-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/plan
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: plan-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: scheduler-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/scheduler
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: scheduler-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: subscriber-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/subscriber
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: subscriber-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: templates-data
+spec:
+  storageClassName: hostpath
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/templates
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: templates-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nats-data
+  labels:
+    volume-type: nats
+spec:
+  storageClassName: hostpath
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /data/nats/data
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: jetstream-pvc
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nats-data-1
+  labels:
+    volume-type: nats
+spec:
+  storageClassName: hostpath
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /data/nats/data
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: jetstream-pvc-1
+    namespace: default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nats-data-2
+  labels:
+    volume-type: nats
+spec:
+  storageClassName: hostpath
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 2Gi
+  hostPath:
+    path: /data/nats/data
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: jetstream-pvc-2
+    namespace: default

@@ -1,0 +1,51 @@
+name: test-libs-core
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "libs/Core/**"
+  pull_request_target:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    paths:
+      - "libs/Core/package.json"
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - "libs/Core/**"
+
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install @channel360/core
+        run: |
+          yarn workspace @channel360/core install
+
+      - name: Run Tests
+        working-directory: libs/Core
+        run: |
+          touch .env.local
+            echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.local
+            echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.local
+            echo AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }} >> .env.local
+            echo AWS_COGNITO_CLIENT_SECRET=${{ secrets.AWS_COGNITO_CLIENT_SECRET }} >> .env.local
+            echo AWS_COGNITO_REGION=${{ secrets.AWS_COGNITO_REGION }} >> .env.local
+            echo AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }} >> .env.local
+          cat .env.local
+      
+          yarn test:ci --coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: libs/Core
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

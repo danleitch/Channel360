@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: webhook-srv-monitor
+  annotations:
+    prometheus.io/port: "webhook"
+    prometheus.io/scrape: "true"
+  labels:
+    monitoring: "true"
+spec:
+  selector:
+    matchLabels:
+      app: webhook
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: webhook
+      interval: 30s
+      path: /metrics

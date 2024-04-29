@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@publishers/*": ["./src/events/publishers/*"],
+      "@listeners/*": ["./src/events/listeners/*"],
+      "@validations/*": ["./src/validations/*"],
+      "@models/*": ["./src/models/*"],
+      "@interfaces/*": ["./src/classes/interfaces/*"],
+      "@controllers/*": ["./src/classes/controllers/*"],
+      "@repositories/*": ["./src/classes/repositories/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@seeders/*": ["./src/test/seeders/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@services/*": ["./src/services/*"],
+      "@app": ["./src/app.ts"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

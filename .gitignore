@@ -1,0 +1,29 @@
+# Ignore generated directories and files
+node_modules
+.next
+.vscode
+vcs.xml
+dist
+# Ignore macOS .DS_Store files
+.DS_Store*
+
+# Ignore environment-specific files
+.env.local
+
+# Ignore log files
+*.log
+.DS_Store
+
+#Testing
+coverage
+frontend/client/coverage
+frontend/client/coverage/clover.xml
+frontend/client/coverage/coverage-final.json
+frontend/client/coverage/lcov.info
+frontend/client/coverage/lcov-report/index.html
+
+## Tubro
+.turbo
+build/**
+dist/**
+next/**

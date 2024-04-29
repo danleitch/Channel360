@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: organization-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: organization-mongo
+  template:
+    metadata:
+      labels:
+        app: organization-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: organization-mongo
+          args: ["--dbpath", "data/db/organization"]
+          volumeMounts:
+            - name: "organization-data"
+              mountPath: "/data/db/organization"
+      volumes:
+        - name: "organization-data"
+          persistentVolumeClaim:
+            claimName: "organization-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: organization-mongo-srv
+spec:
+  selector:
+    app: organization-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="stylesheet"
+    />
+    <style>
+        * {
+            font-family: "Roboto",serif;
+        }
+
+        .btn {
+            position: relative;
+
+            display: block;
+            margin: 30px auto;
+            padding: 0;
+
+            overflow: hidden;
+
+            border-width: 0;
+            outline: none;
+            border-radius: 2px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+
+            background-color: #02b3ee;
+            color: #ecf0f1;
+
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            background-color: #02b3ee;
+        }
+
+        .btn > * {
+            position: relative;
+        }
+
+        .btn span {
+            display: block;
+            padding: 12px 24px;
+        }
+
+        .btn:before {
+            content: "";
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            display: block;
+            width: 0;
+            padding-top: 0;
+
+            border-radius: 100%;
+
+            background-color: rgba(236, 240, 241, 0.3);
+
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:active:before {
+            width: 120%;
+            padding-top: 120%;
+
+            transition: width 0.2s ease-out, padding-top 0.2s ease-out;
+        }
+
+        /* Styles, not important */
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        html {
+            position: relative;
+            height: 100%;
+        }
+
+        body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+
+            background-color: #ecf0f1;
+            color: #34495e;
+            font-family: Trebuchet, Arial, sans-serif;
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: normal;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .small {
+            font-size: 0.6rem;
+        }
+    </style>
+</head>
+<body>
+<div class="grid-container">
+    <div class="grid-item">
+        <h1>Channel360</h1>
+        <hr>
+        <h2 class="text-left">
+            You have been invited to join {{channelName}}
+        </h2>
+        <p class="text-left">
+            Please click the button below to accept the invitation.
+        </p>
+        <!--suppress HtmlUnknownTarget -->
+        <a href="{{url}}" class="btn" type="button"><span>Join Organization</span></a>
+        <p class="text-left">
+            Yours Sincerely,
+            <br>
+            The Channel360 Team
+        </p>
+        <hr>
+        <span class="text-center small">
+          If you did not request to join this organization, please ignore this email.
+        </span>
+        <h4>This message was brought to you by Channel360©</h4>
+    </div>
+</div>
+</body>
+</html>

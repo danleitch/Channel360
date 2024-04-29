@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: codenameninja/logging
+      context: ../apps/api/logging
+      sync:
+        manual:
+          - src: “src/**/*.ts”
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/jetstream.yaml
+    - ../infra/k8s-dev/k8s/nats*
+    - ../infra/k8s-dev/ingress-srv.yaml
+    - ../infra/k8s-dev/k8s/logging*
+deploy:
+  kubectl: {}

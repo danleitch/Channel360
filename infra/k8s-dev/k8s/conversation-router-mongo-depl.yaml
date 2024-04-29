@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversation-router-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conversation-router-mongo
+  template:
+    metadata:
+      labels:
+        app: conversation-router-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: conversation-router-mongo
+          args: ["--dbpath", "data/db/conversation"]
+          volumeMounts:
+            - name: "conversation-router-data"
+              mountPath: "/data/db/conversation"
+      volumes:
+        - name: "conversation-router-data"
+          persistentVolumeClaim:
+            claimName: "conversation-router-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: conversation-router-mongo-srv
+spec:
+  selector:
+    app: conversation-router-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

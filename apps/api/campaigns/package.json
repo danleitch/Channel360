@@ -1,0 +1,29 @@
+{
+  "name": "campaigns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn -r tsconfig-paths/register --inspect=0.0.0.0:9229 --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest --no-cache",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*",
+    "csv-parse": "^5.5.2",
+    "csvtojson": "^2.0.10",
+    "json2csv": "^6.0.0-alpha.2",
+    "libphonenumber-js": "^1.10.12",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@types/json2csv": "^5.0.3"
+  }
+}

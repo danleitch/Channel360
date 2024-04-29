@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reports
+  template:
+    metadata:
+      labels:
+        app: reports
+    spec:
+      containers:
+        - name: reports
+          image: codenameninja/reports:latest
+          imagePullPolicy: Always
+          env:
+            - name: NATS_URL
+              value: http://nats-jet-0:4222, http://nats-jet-1:4222, http://nats-jet-2:4222
+            - name: CLUSTER_ID
+              value: channel
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/reports
+            - name: USER_MONGO_URI
+              value: mongodb+srv://Zdr6sLatBzJ:CilrEyGwxCUulVeG@auth.kpmhdy6.mongodb.net/auth
+            - name: CONVERSATION_MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/campaigns
+            - name: SUBSCRIBER_MONGO_URI
+              value: mongodb+srv://Zdr6sLatBzJ:CilrEyGwxCUulVeG@subscribers.aqyvr9c.mongodb.net/susbcriber
+            - name: CAMPAIGN_MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/campaigns
+            - name: LOGGING_MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/logging
+            - name: TEMPLATE_MONGO_URI
+              value: mongodb+srv://dv9na3bZdzz:aBRXoDJFJ9OX2c9Q@production.x7wnh49.mongodb.net/templates
+            - name: ADMIN_JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: admin-secret
+                  key: ADMIN_JWT_KEY
+            - name: AWS_COGNITO_POOL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-pool-id
+                  key: AWS_COGNITO_POOL_ID
+            - name: AWS_COGNITO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-cognito-client-id
+                  key: AWS_COGNITO_CLIENT_ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reports-srv
+spec:
+  selector:
+    app: reports
+  ports:
+    - name: reports
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@jobs/*": ["./src/jobs/*"],
+      "@publishers/*": ["./src/events/publishers/*"],
+      "@listeners/*": ["./src/events/listeners/*"],
+      "@definitions/*": ["./src/jobs/definitions/*"],
+      "@handlers/*": ["./src/jobs/handlers/*"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

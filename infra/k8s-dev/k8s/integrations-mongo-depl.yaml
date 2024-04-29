@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: integrations-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: integrations-mongo
+  template:
+    metadata:
+      labels:
+        app: integrations-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: integrations-mongo
+          args: ["--dbpath", "data/db"]
+          volumeMounts:
+            - name: "integrations-data"
+              mountPath: "/data/db/integrations"
+      volumes:
+        - name: "integrations-data"
+          persistentVolumeClaim:
+            claimName: "integrations-pvc"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: integrations-mongo-srv
+spec:
+  selector:
+    app: integrations-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

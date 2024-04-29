@@ -1,0 +1,253 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+  labels:
+    app: nats
+spec:
+  replicas: 1
+  serviceName: nats
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+        - name: nats
+          image: nats:2.9.20-alpine3.18
+          command: [ "nats-server" ]
+          args: ["-c", "/etc/nats/nats-server.conf","--name", 'nats-jet-0', "-p", "4222", "-m", "8222", "-js"]
+          ports:
+            - containerPort: 4222
+              name: client
+            - containerPort: 6222
+              name: leaf
+            - containerPort: 8222
+              name: monitor
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/nats/nats-server.conf
+              subPath: nats-server.conf
+            - name: jetstream-storage
+              mountPath: "/data/jetstream"
+          resources:
+            limits:
+              memory: "500Mi"  # Set your desired memory limit
+              cpu: "400m"       # Set your desired CPU limit
+            requests:
+              memory: "300Mi"  # Set your desired memory request
+              cpu: "300m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jetstream-config
+            items:
+              - key: nats-server.conf
+                path: nats-server.conf
+        - name: jetstream-storage
+          persistentVolumeClaim:
+            claimName: jetstream-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats-1
+  labels:
+    app: nats-1
+spec:
+  replicas: 1
+  serviceName: nats-1
+  selector:
+    matchLabels:
+      app: nats-1
+  template:
+    metadata:
+      labels:
+        app: nats-1
+    spec:
+      containers:
+        - name: nats-2
+          image: nats:2.9.20-alpine3.18
+          command: [ "nats-server" ]
+          args: ["-c", "/etc/nats/nats-server.conf","--name", 'nats-jet-1', "-p", "4222", "-m", "8222", "-js"]
+          ports:
+            - containerPort: 4222
+              name: client
+            - containerPort: 6222
+              name: leaf
+            - containerPort: 8222
+              name: monitor
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/nats/nats-server.conf
+              subPath: nats-server.conf
+            - name: jetstream-storage
+              mountPath: "/data/jetstream"
+          resources:
+            limits:
+              memory: "500Mi"  # Set your desired memory limit
+              cpu: "300m"       # Set your desired CPU limit
+            requests:
+              memory: "300Mi"  # Set your desired memory request
+              cpu: "200m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jetstream-config
+            items:
+              - key: nats-server.conf
+                path: nats-server.conf
+        - name: jetstream-storage
+          persistentVolumeClaim:
+            claimName: jetstream-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats-2
+  labels:
+    app: nats-2
+spec:
+  replicas: 1
+  serviceName: nats-2
+  selector:
+    matchLabels:
+      app: nats-2
+  template:
+    metadata:
+      labels:
+        app: nats-2
+    spec:
+      containers:
+        - name: nats-2
+          image: nats:2.9.20-alpine3.18
+          command: [ "nats-server" ]
+          args: ["-c", "/etc/nats/nats-server.conf","--name", 'nats-jet-2', "-p", "4222", "-m", "8222", "-js"]
+          ports:
+            - containerPort: 4222
+              name: client
+            - containerPort: 6222
+              name: leaf
+            - containerPort: 8222
+              name: monitor
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/nats/nats-server.conf
+              subPath: nats-server.conf
+            - name: jetstream-storage
+              mountPath: "/data/jetstream"
+          resources:
+            limits:
+              memory: "500Mi"  # Set your desired memory limit
+              cpu: "300m"       # Set your desired CPU limit
+            requests:
+              memory: "200Mi"  # Set your desired memory request
+              cpu: "100m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: jetstream-config
+            items:
+              - key: nats-server.conf
+                path: nats-server.conf
+        - name: jetstream-storage
+          persistentVolumeClaim:
+            claimName: jetstream-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-jet-0
+spec:
+  selector:
+    app: nats
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+      name: client
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+      name: leaf
+    - protocol: TCP
+      port: 8222
+      targetPort: 8222
+      name: monitor
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-jet-1
+spec:
+  selector:
+    app: nats-1
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+      name: client
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+      name: leaf
+    - protocol: TCP
+      port: 8222
+      targetPort: 8222
+      name: monitor
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-jet-2
+spec:
+  selector:
+    app: nats-2
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+      name: client
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+      name: leaf
+    - protocol: TCP
+      port: 8222
+      targetPort: 8222
+      name: monitor

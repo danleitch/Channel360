@@ -1,0 +1,29 @@
+name: "send-notification"
+deployment:
+  tag: "staging"
+  repository: "codenameninja"
+database:
+  url: mongodb+srv://staging_user:ooToR3JHdc2K54Tx@auth.uqgcn8c.mongodb.net/campaigns
+hpa:
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_total
+        target:
+          type: AverageValue
+          averageValue: 1000m

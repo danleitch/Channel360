@@ -1,0 +1,32 @@
+{
+  "trigger": "notification:delivery:user",
+  "app": {
+    "_id": "6429fcefd361f7011ac0198d"
+  },
+  "version": "v1.1",
+  "timestamp": 1693231140.549,
+  "destination": {
+    "type": "whatsapp",
+    "integrationId": "642c1a8f90604b001112af99",
+    "destinationId": "27656225667"
+  },
+  "isFinalEvent": true,
+  "externalMessages": [
+    {
+      "id": "wamid.HBgLMjc2NTUxODkxMDAVAgARGBI3RDQyN0U4NEU1RkNGQ0IxMEQA"
+    }
+  ],
+  "notification": {
+    "_id": "a24f5616-0f03-4903-997c-ea4fabdcb973"
+  },
+  "matchResult": {
+    "appUser": {
+      "_id": "22ea5bafd1935658394fa73f",
+      "conversationStarted": true
+    },
+    "conversation": {
+      "_id": "7ad750130c88d9655e1c09a2"
+    }
+  }
+}
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: codenameninja/client:latest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "2000Mi"
+              cpu: "750m"
+            requests:
+              memory: "1500Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_ENVIRONMENT
+              value: "production"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  selector:
+    app: client
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

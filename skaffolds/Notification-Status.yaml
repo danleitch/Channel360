@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+
+    - image: codenameninja/notification-status
+      context: ../
+      sync:
+        manual:
+          - src: apps/api/notification-status/**/*.ts
+            dest: ./apps/api/notification-status
+      docker:
+        dockerfile: ./apps/api/notification-status/Dockerfile.dev
+
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - ../infra/k8s-dev/k8s/notification-status*
+deploy:
+  kubectl: { }

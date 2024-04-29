@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: conversation-router-srv-monitor
+  annotations:
+    prometheus.io/port: "conversation-router"
+    prometheus.io/scrape: "true"
+  labels:
+    monitoring: "true"
+spec:
+  selector:
+    matchLabels:
+      app: conversation-router
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: conversation-router
+      interval: 30s
+      path: /metrics

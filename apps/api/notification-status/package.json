@@ -1,0 +1,20 @@
+{
+  "name": "notification-status",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev --respawn --inspect=0.0.0.0:9229 --poll src/index.ts",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "test": "jest --watchAll --no-cache",
+    "test:ci": "jest --no-cache"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@channel360/core": "*"
+  },
+  "devDependencies": {
+  }
+}

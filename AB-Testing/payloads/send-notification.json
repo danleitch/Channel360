@@ -1,0 +1,17 @@
+{
+  "organizationId": "6424439655cf37a8df0ce20b",
+  "destination": "+27656225667",
+  "message": {
+    "type": "template",
+    "template": {
+      "name": "none_button_test",
+      "language": {
+        "policy": "deterministic",
+        "code": "en_US"
+      },
+      "components": [
+
+      ]
+    }
+  }
+}

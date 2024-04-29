@@ -1,0 +1,48 @@
+{
+  "DBConnection": {
+    "title": "Connecting Database to Kurbenetes"
+  },
+  "AddEnviromentVariables": {
+    "title": "Add Enviroment Variables"
+  },
+  "DeployingToAWS": {
+    "title": "Deploying to AWS"
+  },
+  "PublishingAPackageToNPM": {
+    "title": "Publishing a package to NPM"
+  },
+  "ANoteOnOurCommonDirectory": {
+    "title": "A Note on our Common Directory"
+  },
+  "PortForwardingPod": {
+    "title": "Port Forwarding Pod"
+  },
+  "Smooch": {
+    "title": "Smooch",
+    "children": {
+      "SmoochIntegrationStratergy": {
+        "title": "Smooch Integration Strategy"
+      }
+    }
+  },
+  "Deployment": {
+    "title": "Deployment",
+    "children": {
+      "HowToDeployToDigitalOcean": {
+        "title": "How to Deploy to Digital Ocean"
+      },
+      "eks": {
+        "title": "eks"
+      }
+    }
+  },
+  "Templates": {
+    "title": "Templates"
+  },
+  "Scheduler": {
+    "title": "Scheduler"
+  },
+  "Campaigns": {
+    "title": "Campaigns"
+  }
+}
