@@ -24,7 +24,7 @@
     "@auth0/auth0-react": "^2.2.1",
     "@channel360/ui-core": "*",
     "@emotion/cache": "^11.10.5",
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fullcalendar/core": "^6.1.10",
     "@fullcalendar/daygrid": "^6.1.10",
